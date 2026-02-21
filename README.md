@@ -75,7 +75,7 @@ cd mongodb-tutorial/mongodb-spring-course
 This will:
 - Compile all 21 modules
 - Download Docker images (first run only: `mongo:8.0`, `postgres:16-alpine`)
-- Run all tests (146 tests across M01–M07)
+- Run all tests (477 tests across M01–M17)
 
 ### 2. Run Specific Module Tests
 
@@ -83,20 +83,24 @@ This will:
 # M01: RDB vs MongoDB comparison
 ./gradlew :m01-rdb-vs-nosql:test
 
-# M05: Spring Data CRUD
-./gradlew :m05-spring-data-crud:test
-
 # M07: Aggregation Pipeline
 ./gradlew :m07-aggregation-pipeline:test
+
+# M10: DDD Aggregate Modeling
+./gradlew :m10-ddd-aggregate-modeling:test
+
+# M17: Observability
+./gradlew :m17-observability:test
 ```
 
 ### 3. Read the Documentation
 
-Each module has 3 documentation files (Traditional Chinese). Start from M01:
+Each module has 2–3 documentation files (Traditional Chinese). Start from M01:
 
 ```bash
 ls mongodb-spring-course/m01-rdb-vs-nosql/docs/
-ls mongodb-spring-course/m07-aggregation-pipeline/docs/
+ls mongodb-spring-course/m10-ddd-aggregate-modeling/docs/
+ls mongodb-spring-course/m17-observability/docs/
 ```
 
 ---
@@ -126,18 +130,18 @@ mongodb-tutorial/
     ├── m05-spring-data-crud/     ✅ Phase 2: CRUD Operations (42 tests)
     ├── m06-query-dsl/            ✅ Phase 2: Query DSL (48 tests)
     ├── m07-aggregation-pipeline/ ✅ Phase 2: Aggregation (46 tests)
-    ├── m08-schema-validation/       Phase 2: Schema Validation
-    ├── m09-transactions/            Phase 2: Transactions
+    ├── m08-schema-validation/    ✅ Phase 2: Schema Validation (38 tests)
+    ├── m09-transactions/         ✅ Phase 2: Transactions (38 tests)
     │
-    ├── m10-ddd-aggregate-modeling/  Phase 3: DDD Aggregates
-    ├── m11-polymorphism-inheritance Phase 3: Polymorphism
-    ├── m12-event-sourcing/          Phase 3: Event Sourcing
-    ├── m13-cqrs-read-model/         Phase 3: CQRS
-    ├── m14-saga-pattern/            Phase 3: SAGA Pattern
+    ├── m10-ddd-aggregate-modeling/ ✅ Phase 3: DDD Aggregates (41 tests)
+    ├── m11-polymorphism-inheritance ✅ Phase 3: Polymorphism (32 tests)
+    ├── m12-event-sourcing/       ✅ Phase 3: Event Sourcing (32 tests)
+    ├── m13-cqrs-read-model/      ✅ Phase 3: CQRS (33 tests)
+    ├── m14-saga-pattern/         ✅ Phase 3: SAGA Pattern (28 tests)
     │
-    ├── m15-indexing-performance/    Phase 4: Indexing
-    ├── m16-change-streams/          Phase 4: Change Streams
-    ├── m17-observability/           Phase 4: Observability
+    ├── m15-indexing-performance/ ✅ Phase 4: Indexing (28 tests)
+    ├── m16-change-streams/       ✅ Phase 4: Change Streams (24 tests)
+    ├── m17-observability/        ✅ Phase 4: Observability (24 tests)
     ├── m18-migration-versioning/    Phase 4: Schema Migration
     │
     ├── m19-banking-capstone/        Phase 5: Banking Capstone
@@ -171,31 +175,31 @@ mongodb-tutorial/
 | M05 | Spring Data CRUD | MongoRepository, MongoTemplate, Derived Queries, @Query, Pagination | 42 |
 | M06 | Query DSL | Criteria API, TextSearch, Geospatial, Aggregation intro | 48 |
 | M07 | Aggregation Pipeline | $match/$group/$unwind/$lookup/$bucket/$facet, Typed DTOs | 46 |
-| M08 | Schema Validation | *(planned)* | — |
-| M09 | Transactions | *(planned)* | — |
+| M08 | Schema Validation | $jsonSchema + Jakarta Bean Validation, Schema Evolution, DocumentMigrator | 38 |
+| M09 | Transactions | @Transactional, TransactionTemplate, ClientSession, WriteConflict | 38 |
 
 ### Phase 3: DDD & Advanced Modeling (M10–M14) ★★★
 
 > Goal: Apply Domain-Driven Design patterns with MongoDB.
 
-```
-M10 ── DDD Aggregates ──── Hexagonal Architecture + MongoDB
-M11 ── Polymorphism ────── Sealed Interfaces, Discriminators
-M12 ── Event Sourcing ──── Event Store, Replay, Snapshots
-M13 ── CQRS ────────────── Read Models, Projections
-M14 ── SAGA Pattern ────── Distributed Transactions, Compensation
-```
+| Module | Topic | Key Concepts | Tests |
+|--------|-------|--------------|-------|
+| M10 | DDD Aggregates | Hexagonal Architecture, Port/Adapter, Domain Events, Specification Pattern | 41 |
+| M11 | Polymorphism | Sealed Interface, @TypeAlias, Custom Converter, Guarded Patterns | 32 |
+| M12 | Event Sourcing | Event Store, Snapshot, Event Replay, Optimistic Concurrency | 32 |
+| M13 | CQRS | Command/Query Separation, Synchronous Projection, ProjectionRebuildService | 33 |
+| M14 | SAGA Pattern | Orchestration Saga, SagaOrchestrator, SagaLog, Reverse Compensation | 28 |
 
 ### Phase 4: Operations & Performance (M15–M18) ★★★
 
 > Goal: Production-ready MongoDB with indexing, monitoring, and migration.
 
-```
-M15 ── Indexing ──────── ESR Rule, Compound Indexes, explain()
-M16 ── Change Streams ── Real-time Sync, CDC
-M17 ── Observability ──── Metrics, Logging, Tracing
-M18 ── Migration ──────── Schema Versioning, Mongock
-```
+| Module | Topic | Key Concepts | Tests |
+|--------|-------|--------------|-------|
+| M15 | Indexing | ESR Rule, Compound/TTL/Partial/Sparse Index, Covered Query, explain() | 28 |
+| M16 | Change Streams | MessageListenerContainer, Native Driver watch(), Resume Token, CDC | 24 |
+| M17 | Observability | Actuator + Micrometer, CommandListener, SlowQueryDetector, HealthIndicator | 24 |
+| M18 | Migration | *(planned)* | — |
 
 ### Phase 5: Capstone Projects (M19–M21) ★★★
 
@@ -271,6 +275,80 @@ All documentation is written in **Traditional Chinese (zh-TW)**.
 | [DOC-02](mongodb-spring-course/m07-aggregation-pipeline/docs/M07-DOC-02-lookup-unwind-facet.md) | $lookup、$unwind 與 $facet |
 | [DOC-03](mongodb-spring-course/m07-aggregation-pipeline/docs/M07-DOC-03-patterns-and-performance.md) | $bucket 分桶分析與效能最佳化 |
 
+#### M08 — Schema Validation
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m08-schema-validation/docs/M08-DOC-01-mongodb-json-schema.md) | MongoDB $jsonSchema 驗證 |
+| [DOC-02](mongodb-spring-course/m08-schema-validation/docs/M08-DOC-02-bean-validation-dual-strategy.md) | Bean Validation 雙軌策略 |
+| [DOC-03](mongodb-spring-course/m08-schema-validation/docs/M08-DOC-03-schema-evolution-migration.md) | Schema Evolution 與遷移 |
+
+#### M09 — Transactions
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m09-transactions/docs/M09-DOC-01-mongodb-transaction-deep-dive.md) | MongoDB Transaction 深入解析 |
+| [DOC-02](mongodb-spring-course/m09-transactions/docs/M09-DOC-02-spring-transactional-mongodb.md) | Spring @Transactional + MongoDB |
+| [DOC-03](mongodb-spring-course/m09-transactions/docs/M09-DOC-03-transaction-patterns-pitfalls.md) | Transaction 模式與陷阱 |
+
+#### M10 — DDD Aggregate Modeling
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m10-ddd-aggregate-modeling/docs/M10-DOC-01-aggregate-root-collection-mapping.md) | Aggregate Root 與 Collection 映射 |
+| [DOC-02](mongodb-spring-course/m10-ddd-aggregate-modeling/docs/M10-DOC-02-hexagonal-architecture-mongodb.md) | Hexagonal Architecture + MongoDB |
+| [DOC-03](mongodb-spring-course/m10-ddd-aggregate-modeling/docs/M10-DOC-03-rich-domain-model-mongodb.md) | Rich Domain Model + MongoDB |
+
+#### M11 — Polymorphism & Inheritance
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m11-polymorphism-inheritance/docs/M11-DOC-01-mongodb-polymorphism-strategies.md) | MongoDB 多型策略 |
+| [DOC-02](mongodb-spring-course/m11-polymorphism-inheritance/docs/M11-DOC-02-sealed-interface-mongodb.md) | Sealed Interface + MongoDB |
+
+#### M12 — Event Sourcing
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m12-event-sourcing/docs/M12-DOC-01-event-sourcing-mongodb.md) | Event Sourcing + MongoDB |
+| [DOC-02](mongodb-spring-course/m12-event-sourcing/docs/M12-DOC-02-domain-event-design.md) | Domain Event 設計 |
+
+#### M13 — CQRS Read Model
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m13-cqrs-read-model/docs/M13-DOC-01-cqrs-pattern-mongodb.md) | CQRS Pattern + MongoDB |
+| [DOC-02](mongodb-spring-course/m13-cqrs-read-model/docs/M13-DOC-02-projection-design.md) | Projection 設計 |
+
+#### M14 — Saga Pattern
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m14-saga-pattern/docs/M14-DOC-01-saga-pattern-mongodb.md) | Saga Pattern + MongoDB |
+| [DOC-02](mongodb-spring-course/m14-saga-pattern/docs/M14-DOC-02-saga-orchestration-design.md) | Saga Orchestration 設計 |
+
+#### M15 — Indexing & Performance
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m15-indexing-performance/docs/M15-DOC-01-index-types.md) | MongoDB 索引類型 |
+| [DOC-02](mongodb-spring-course/m15-indexing-performance/docs/M15-DOC-02-esr-rule-index-design.md) | ESR Rule 與索引設計 |
+| [DOC-03](mongodb-spring-course/m15-indexing-performance/docs/M15-DOC-03-performance-benchmarking.md) | 效能基準測試 |
+
+#### M16 — Change Streams
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m16-change-streams/docs/M16-DOC-01-change-streams-fundamentals.md) | Change Streams 基礎 |
+| [DOC-02](mongodb-spring-course/m16-change-streams/docs/M16-DOC-02-spring-data-message-listener.md) | Spring Data MessageListener |
+
+#### M17 — Observability
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m17-observability/docs/M17-DOC-01-mongodb-observability-pillars.md) | MongoDB 可觀測性三支柱 |
+| [DOC-02](mongodb-spring-course/m17-observability/docs/M17-DOC-02-actuator-micrometer-mongodb.md) | Spring Boot Actuator + Micrometer + MongoDB |
+
 ---
 
 ## Business Domains
@@ -279,9 +357,9 @@ The course uses three real-world domains throughout all modules:
 
 | Domain | Key Entities | Modules |
 |--------|-------------|---------|
-| **Banking** | BankAccount, AccountType, AccountStatus | M01, M05, M06, M07 |
-| **Insurance** | InsurancePolicyDocument, PolicyType, PolicyStatus | M01, M05, M06, M07 |
-| **E-commerce** | Product, Order, OrderItem, OrderStatus | M05, M06, M07 |
+| **Banking** | BankAccount, Transaction, LoanApplication, FinancialProduct | M01, M05–M07, M09, M10–M13, M15–M17 |
+| **Insurance** | InsurancePolicy, Claim, ClaimProcess, ClaimSettlement | M01, M05–M07, M09–M14, M16 |
+| **E-commerce** | Product, Order, OrderItem, OrderSaga | M05–M07, M10, M14–M17 |
 
 ---
 

@@ -2,6 +2,7 @@
 .gradle/
 build/
 buildSrc/build/
+bin/
 
 # IDE
 .idea/
