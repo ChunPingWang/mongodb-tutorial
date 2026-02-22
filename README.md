@@ -75,7 +75,7 @@ cd mongodb-tutorial/mongodb-spring-course
 This will:
 - Compile all 21 modules
 - Download Docker images (first run only: `mongo:8.0`, `postgres:16-alpine`)
-- Run all tests (477 tests across M01–M17)
+- Run all tests (573 tests across M01–M21)
 
 ### 2. Run Specific Module Tests
 
@@ -142,11 +142,11 @@ mongodb-tutorial/
     ├── m15-indexing-performance/ ✅ Phase 4: Indexing (28 tests)
     ├── m16-change-streams/       ✅ Phase 4: Change Streams (24 tests)
     ├── m17-observability/        ✅ Phase 4: Observability (24 tests)
-    ├── m18-migration-versioning/    Phase 4: Schema Migration
+    ├── m18-migration-versioning/ ✅ Phase 4: Schema Migration (24 tests)
     │
-    ├── m19-banking-capstone/        Phase 5: Banking Capstone
-    ├── m20-insurance-capstone/      Phase 5: Insurance Capstone
-    └── m21-ecommerce-capstone/      Phase 5: E-commerce Capstone
+    ├── m19-banking-capstone/    ✅ Phase 5: Banking Capstone (24 tests)
+    ├── m20-insurance-capstone/  ✅ Phase 5: Insurance Capstone (24 tests)
+    └── m21-ecommerce-capstone/  ✅ Phase 5: E-commerce Capstone (24 tests)
 
 ✅ = Implemented with tests, BDD scenarios, and documentation
 ```
@@ -199,17 +199,25 @@ mongodb-tutorial/
 | M15 | Indexing | ESR Rule, Compound/TTL/Partial/Sparse Index, Covered Query, explain() | 28 |
 | M16 | Change Streams | MessageListenerContainer, Native Driver watch(), Resume Token, CDC | 24 |
 | M17 | Observability | Actuator + Micrometer, CommandListener, SlowQueryDetector, HealthIndicator | 24 |
-| M18 | Migration | *(planned)* | — |
+| M18 | Schema Migration | Mongock Eager + Converter Lazy Migration, Rollback, Zero-Downtime Coexistence | 24 |
 
 ### Phase 5: Capstone Projects (M19–M21) ★★★
 
-> Goal: Build complete systems integrating all learned concepts.
+> Goal: Build complete systems integrating all learned concepts from M01–M18.
 
-```
-M19 ── Banking System ──── Event Sourcing + CQRS + SAGA
-M20 ── Insurance System ── Polymorphism + Aggregation + Validation
-M21 ── E-commerce System ─ High Concurrency + Polyglot Persistence
-```
+| Module | Topic | Integration Highlights | Tests |
+|--------|-------|----------------------|-------|
+| M19 | Banking Capstone | ES + CQRS + Saga + DDD + Schema Validation + Indexing + Change Streams + Observability | 24 |
+| M20 | Insurance Capstone | Polymorphism + ES + CQRS + Saga + DDD Specification reading CQRS | 24 |
+| M21 | E-commerce Capstone | **Aggregation Pipeline as Business Logic** in Saga + DDD Specification | 24 |
+
+Each capstone has a **novel integration** not seen in prior modules:
+
+| Capstone | Novel Integration |
+|----------|-------------------|
+| M19 Banking | ES feeds CQRS synchronously in saga; Change Stream on event store |
+| M20 Insurance | Polymorphism + ES; CQRS feeds Saga (simple queries); DDD creates polymorphic entities |
+| M21 E-commerce | Aggregation Pipeline on CQRS read models in Saga + DDD Spec |
 
 ---
 
@@ -349,6 +357,34 @@ All documentation is written in **Traditional Chinese (zh-TW)**.
 | [DOC-01](mongodb-spring-course/m17-observability/docs/M17-DOC-01-mongodb-observability-pillars.md) | MongoDB 可觀測性三支柱 |
 | [DOC-02](mongodb-spring-course/m17-observability/docs/M17-DOC-02-actuator-micrometer-mongodb.md) | Spring Boot Actuator + Micrometer + MongoDB |
 
+#### M18 — Schema Migration & Versioning
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m18-migration-versioning/docs/M18-DOC-01-mongock-eager-migration.md) | Mongock Eager 批次遷移 |
+| [DOC-02](mongodb-spring-course/m18-migration-versioning/docs/M18-DOC-02-converter-lazy-migration.md) | Converter Lazy 惰性遷移 |
+
+#### M19 — Banking Capstone
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m19-banking-capstone/docs/M19-DOC-01-banking-capstone-architecture.md) | Banking Capstone 架構概覽 |
+| [DOC-02](mongodb-spring-course/m19-banking-capstone/docs/M19-DOC-02-es-cqrs-saga-integration.md) | ES + CQRS + Saga 整合 |
+
+#### M20 — Insurance Capstone
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m20-insurance-capstone/docs/M20-DOC-01-insurance-capstone-architecture.md) | Insurance Capstone 架構概覽 |
+| [DOC-02](mongodb-spring-course/m20-insurance-capstone/docs/M20-DOC-02-polymorphism-event-sourcing-integration.md) | 多型 + Event Sourcing 整合 |
+
+#### M21 — E-commerce Capstone
+
+| Document | Title |
+|----------|-------|
+| [DOC-01](mongodb-spring-course/m21-ecommerce-capstone/docs/M21-DOC-01-ecommerce-capstone-architecture.md) | E-commerce Capstone 架構概覽 |
+| [DOC-02](mongodb-spring-course/m21-ecommerce-capstone/docs/M21-DOC-02-aggregation-driven-business-logic.md) | 聚合管線驅動業務邏輯 |
+
 ---
 
 ## Business Domains
@@ -465,6 +501,87 @@ cd mongodb-spring-course
 | **Studio 3T** | Advanced MongoDB IDE | [studio3t.com](https://studio3t.com/) |
 | **SDKMAN** | Java version manager | [sdkman.io](https://sdkman.io/) |
 | **Docker Desktop** | Container runtime for Testcontainers | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/) |
+
+---
+
+## Application Migration Reference
+
+> 從傳統 RDB 遷移到 DDD + MongoDB 架構的實務指南
+
+完成本課程後，讀者可運用以下策略將既有應用改造為 MongoDB 架構。
+
+### 核心觀念：Domain Model vs Data Model
+
+傳統 RDB 開發中，業務規則散落在三處：資料表約束（`NOT NULL`、`CHECK`）、SQL / Stored Procedure、Service 層 if-else。**知識被打碎了**。
+
+Domain Model 把業務規則收攏到物件自身（充血模型），狀態變更的唯一途徑是呼叫物件方法，業務規則無法被繞過。
+
+### MongoDB 的天然優勢
+
+**三個邊界天然對齊**：
+
+```
+DDD Aggregate 邊界 ≈ Document 邊界 ≈ Transaction 邊界
+```
+
+| 面向 | RDB | MongoDB |
+|------|-----|---------|
+| Aggregate 重建 | 4~5 次 SQL + ORM 映射 | `findOne()` 直接取得完整 Aggregate |
+| Schema 演進 | `ALTER TABLE` + 修改映射 | Schema-on-Read，Document 隨時擴展 |
+| N+1 問題 | 需 JOIN Fetch 優化 | 天然消失（一次讀取完整 Document） |
+| Event Sourcing | Write Side + Read Side 互相妥協 | MongoDB 同時適合 Event Store 和 Read Model |
+
+### 四階段漸進遷移路線
+
+**核心原則：舊表不動、Adapter 層轉譯、Domain Entity 維持充血模型。**
+
+```
+階段一：Anti-Corruption Layer
+  └→ 在舊 Service 和舊表之間插入 Domain Entity + Adapter，兩套並行
+
+階段二：收攏寫入路徑
+  └→ 業務操作改走 Domain Entity 方法，逐步消除直接 SQL 更新
+
+階段三：引入新 Storage (MongoDB)
+  └→ 在 Adapter 層加入 MongoAdapter，做雙寫，讀取逐步切換
+
+階段四：切換並退役
+  └→ 驗證資料完整性後，停用 JPA Adapter，退役舊表
+```
+
+**每個階段都有穩定的中間態，不存在「一刀切」的風險點。**
+
+### 架構圖
+
+```
+Domain Layer (新)               Infrastructure Layer (Adapter)          Storage (舊/新)
+──────────────────              ────────────────────────────────        ───────────────
+InsurancePolicy                 ├─ JpaInsurancePolicyAdapter ────────→ policy 表
+  .endorse()                    │    ↕ PolicyJpaEntity                  endorsement 表
+  .cancel()                     │    ↕ EndorsementJpaEntity             coverage 表
+  .calculatePremium()           │
+                                │
+InsurancePolicyRepository       ├─ MongoInsurancePolicyAdapter ──────→ policies Collection
+  (Port / Interface)            │    ↕ PolicyDocument                   (未來目標)
+```
+
+### 三個實務摩擦點
+
+| 摩擦 | 處理方式 |
+|------|---------|
+| **約束重複**：DB constraint 與 Domain 規則重複 | Domain 做業務邏輯驗證，DB 做最後防線，確保 Domain 規則是 DB constraint 的超集 |
+| **繞過 Domain 的外部寫入** | 短期用 CDC 偵測，長期遷移其他模組走 Domain API |
+| **Adapter 層 N+1 問題** | Adapter 層做 JOIN Fetch 優化，但不汙染 Domain 層；這也是遷移到 MongoDB 的動機之一 |
+
+### 課程對應模組
+
+| 遷移階段 | 對應課程模組 |
+|---------|------------|
+| Aggregate 設計 | M04 Document Thinking、M10 DDD Aggregate |
+| 充血模型 + Port/Adapter | M10 Hexagonal Architecture |
+| Event Sourcing + CQRS | M12 + M13 |
+| Schema 遷移 + 雙寫 | M08 Schema Validation、M18 Migration |
+| 完整整合範例 | M19 Banking、M20 Insurance、M21 E-commerce Capstone |
 
 ---
 
