@@ -68,7 +68,7 @@ Before you start, make sure you have:
 
 ```bash
 git clone https://github.com/ChunPingWang/mongodb-tutorial.git
-cd mongodb-tutorial/mongodb-spring-course
+cd mongodb-tutorial
 ./gradlew build
 ```
 
@@ -98,9 +98,9 @@ This will:
 Each module has 2–3 documentation files (Traditional Chinese). Start from M01:
 
 ```bash
-ls mongodb-spring-course/m01-rdb-vs-nosql/docs/
-ls mongodb-spring-course/m10-ddd-aggregate-modeling/docs/
-ls mongodb-spring-course/m17-observability/docs/
+ls m01-rdb-vs-nosql/docs/
+ls m10-ddd-aggregate-modeling/docs/
+ls m17-observability/docs/
 ```
 
 ---
@@ -108,45 +108,43 @@ ls mongodb-spring-course/m17-observability/docs/
 ## Project Structure
 
 ```
-mongodb-tutorial/
-├── README.md                          # This file
-├── mongodb-spring-course-curriculum.md # Full curriculum overview
+mongodb-tutorial/                        # Gradle multi-module project
+├── README.md                            # This file
+├── mongodb-spring-course-curriculum.md  # Full curriculum overview
+├── build.gradle.kts                     # Root build
+├── settings.gradle.kts                  # Includes 21 submodules
+├── gradle.properties                    # Parallel builds, caching
+├── gradle/libs.versions.toml            # Centralized version catalog
+├── buildSrc/                            # Convention plugins
+│   └── src/main/kotlin/
+│       ├── course.java-common.gradle.kts    # Java 23 toolchain
+│       └── course.spring-module.gradle.kts  # Spring Boot + test deps
 │
-└── mongodb-spring-course/             # Gradle multi-module project
-    ├── build.gradle.kts               # Root build
-    ├── settings.gradle.kts            # Includes 21 submodules
-    ├── gradle.properties              # Parallel builds, caching
-    ├── gradle/libs.versions.toml      # Centralized version catalog
-    ├── buildSrc/                      # Convention plugins
-    │   └── src/main/kotlin/
-    │       ├── course.java-common.gradle.kts    # Java 23 toolchain
-    │       └── course.spring-module.gradle.kts  # Spring Boot + test deps
-    │
-    ├── m01-rdb-vs-nosql/         ✅ Phase 1: RDB vs NoSQL (14 tests)
-    ├── m02-nosql-landscape/      ✅ Phase 1: NoSQL Landscape (12 tests)
-    ├── m03-environment-setup/    ✅ Phase 1: Environment Setup (5 tests)
-    ├── m04-document-thinking/    ✅ Phase 1: Document Modeling (17 tests)
-    │
-    ├── m05-spring-data-crud/     ✅ Phase 2: CRUD Operations (42 tests)
-    ├── m06-query-dsl/            ✅ Phase 2: Query DSL (48 tests)
-    ├── m07-aggregation-pipeline/ ✅ Phase 2: Aggregation (46 tests)
-    ├── m08-schema-validation/    ✅ Phase 2: Schema Validation (38 tests)
-    ├── m09-transactions/         ✅ Phase 2: Transactions (38 tests)
-    │
-    ├── m10-ddd-aggregate-modeling/ ✅ Phase 3: DDD Aggregates (41 tests)
-    ├── m11-polymorphism-inheritance ✅ Phase 3: Polymorphism (32 tests)
-    ├── m12-event-sourcing/       ✅ Phase 3: Event Sourcing (32 tests)
-    ├── m13-cqrs-read-model/      ✅ Phase 3: CQRS (33 tests)
-    ├── m14-saga-pattern/         ✅ Phase 3: SAGA Pattern (28 tests)
-    │
-    ├── m15-indexing-performance/ ✅ Phase 4: Indexing (28 tests)
-    ├── m16-change-streams/       ✅ Phase 4: Change Streams (24 tests)
-    ├── m17-observability/        ✅ Phase 4: Observability (24 tests)
-    ├── m18-migration-versioning/ ✅ Phase 4: Schema Migration (24 tests)
-    │
-    ├── m19-banking-capstone/    ✅ Phase 5: Banking Capstone (24 tests)
-    ├── m20-insurance-capstone/  ✅ Phase 5: Insurance Capstone (24 tests)
-    └── m21-ecommerce-capstone/  ✅ Phase 5: E-commerce Capstone (24 tests)
+├── m01-rdb-vs-nosql/         ✅ Phase 1: RDB vs NoSQL (14 tests)
+├── m02-nosql-landscape/      ✅ Phase 1: NoSQL Landscape (12 tests)
+├── m03-environment-setup/    ✅ Phase 1: Environment Setup (5 tests)
+├── m04-document-thinking/    ✅ Phase 1: Document Modeling (17 tests)
+│
+├── m05-spring-data-crud/     ✅ Phase 2: CRUD Operations (42 tests)
+├── m06-query-dsl/            ✅ Phase 2: Query DSL (48 tests)
+├── m07-aggregation-pipeline/ ✅ Phase 2: Aggregation (46 tests)
+├── m08-schema-validation/    ✅ Phase 2: Schema Validation (38 tests)
+├── m09-transactions/         ✅ Phase 2: Transactions (38 tests)
+│
+├── m10-ddd-aggregate-modeling/ ✅ Phase 3: DDD Aggregates (41 tests)
+├── m11-polymorphism-inheritance ✅ Phase 3: Polymorphism (32 tests)
+├── m12-event-sourcing/       ✅ Phase 3: Event Sourcing (32 tests)
+├── m13-cqrs-read-model/      ✅ Phase 3: CQRS (33 tests)
+├── m14-saga-pattern/         ✅ Phase 3: SAGA Pattern (28 tests)
+│
+├── m15-indexing-performance/ ✅ Phase 4: Indexing (28 tests)
+├── m16-change-streams/       ✅ Phase 4: Change Streams (24 tests)
+├── m17-observability/        ✅ Phase 4: Observability (24 tests)
+├── m18-migration-versioning/ ✅ Phase 4: Schema Migration (24 tests)
+│
+├── m19-banking-capstone/    ✅ Phase 5: Banking Capstone (24 tests)
+├── m20-insurance-capstone/  ✅ Phase 5: Insurance Capstone (24 tests)
+└── m21-ecommerce-capstone/  ✅ Phase 5: E-commerce Capstone (24 tests)
 
 ✅ = Implemented with tests, BDD scenarios, and documentation
 ```
@@ -231,159 +229,159 @@ All documentation is written in **Traditional Chinese (zh-TW)**.
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m01-rdb-vs-nosql/docs/M01-DOC-01-data-model-philosophy.md) | 資料模型哲學比較 |
-| [DOC-02](mongodb-spring-course/m01-rdb-vs-nosql/docs/M01-DOC-02-cap-consistency.md) | CAP 定理與一致性模型 |
-| [DOC-03](mongodb-spring-course/m01-rdb-vs-nosql/docs/M01-DOC-03-selection-framework.md) | 資料庫選型決策框架 |
+| [DOC-01](m01-rdb-vs-nosql/docs/M01-DOC-01-data-model-philosophy.md) | 資料模型哲學比較 |
+| [DOC-02](m01-rdb-vs-nosql/docs/M01-DOC-02-cap-consistency.md) | CAP 定理與一致性模型 |
+| [DOC-03](m01-rdb-vs-nosql/docs/M01-DOC-03-selection-framework.md) | 資料庫選型決策框架 |
 
 #### M02 — NoSQL Landscape
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m02-nosql-landscape/docs/M02-DOC-01-nosql-categories.md) | NoSQL 資料庫分類與比較 |
-| [DOC-02](mongodb-spring-course/m02-nosql-landscape/docs/M02-DOC-02-mongodb-positioning.md) | MongoDB 在 NoSQL 生態的定位 |
-| [DOC-03](mongodb-spring-course/m02-nosql-landscape/docs/M02-DOC-03-polyglot-persistence.md) | Polyglot Persistence 策略 |
+| [DOC-01](m02-nosql-landscape/docs/M02-DOC-01-nosql-categories.md) | NoSQL 資料庫分類與比較 |
+| [DOC-02](m02-nosql-landscape/docs/M02-DOC-02-mongodb-positioning.md) | MongoDB 在 NoSQL 生態的定位 |
+| [DOC-03](m02-nosql-landscape/docs/M02-DOC-03-polyglot-persistence.md) | Polyglot Persistence 策略 |
 
 #### M03 — Environment Setup
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m03-environment-setup/docs/M03-DOC-01-gradle-multi-module.md) | Gradle Multi-Module 架構 |
-| [DOC-02](mongodb-spring-course/m03-environment-setup/docs/M03-DOC-02-testcontainers-strategy.md) | Testcontainers 測試策略 |
-| [DOC-03](mongodb-spring-course/m03-environment-setup/docs/M03-DOC-03-bdd-tdd-workflow.md) | BDD + TDD 雙軌工作流 |
+| [DOC-01](m03-environment-setup/docs/M03-DOC-01-gradle-multi-module.md) | Gradle Multi-Module 架構 |
+| [DOC-02](m03-environment-setup/docs/M03-DOC-02-testcontainers-strategy.md) | Testcontainers 測試策略 |
+| [DOC-03](m03-environment-setup/docs/M03-DOC-03-bdd-tdd-workflow.md) | BDD + TDD 雙軌工作流 |
 
 #### M04 — Document Thinking
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m04-document-thinking/docs/M04-DOC-01-document-modeling.md) | Document Modeling 設計哲學 |
-| [DOC-02](mongodb-spring-course/m04-document-thinking/docs/M04-DOC-02-bson-type-mapping.md) | BSON 型別與 Java 型別映射 |
-| [DOC-03](mongodb-spring-course/m04-document-thinking/docs/M04-DOC-03-java-records-sealed.md) | Java Records + Sealed Interface |
+| [DOC-01](m04-document-thinking/docs/M04-DOC-01-document-modeling.md) | Document Modeling 設計哲學 |
+| [DOC-02](m04-document-thinking/docs/M04-DOC-02-bson-type-mapping.md) | BSON 型別與 Java 型別映射 |
+| [DOC-03](m04-document-thinking/docs/M04-DOC-03-java-records-sealed.md) | Java Records + Sealed Interface |
 
 #### M05 — Spring Data CRUD
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m05-spring-data-crud/docs/M05-DOC-01-repository-vs-template.md) | MongoRepository vs MongoTemplate |
-| [DOC-02](mongodb-spring-course/m05-spring-data-crud/docs/M05-DOC-02-query-methods.md) | 查詢方法: Derived Queries + @Query |
-| [DOC-03](mongodb-spring-course/m05-spring-data-crud/docs/M05-DOC-03-update-operations.md) | 更新操作: $set/$inc/$push/$pull |
+| [DOC-01](m05-spring-data-crud/docs/M05-DOC-01-repository-vs-template.md) | MongoRepository vs MongoTemplate |
+| [DOC-02](m05-spring-data-crud/docs/M05-DOC-02-query-methods.md) | 查詢方法: Derived Queries + @Query |
+| [DOC-03](m05-spring-data-crud/docs/M05-DOC-03-update-operations.md) | 更新操作: $set/$inc/$push/$pull |
 
 #### M06 — Query DSL
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m06-query-dsl/docs/M06-DOC-01-criteria-api.md) | Criteria API 程式化查詢 |
-| [DOC-02](mongodb-spring-course/m06-query-dsl/docs/M06-DOC-02-text-geospatial.md) | 全文檢索與地理空間查詢 |
-| [DOC-03](mongodb-spring-course/m06-query-dsl/docs/M06-DOC-03-projection-aggregation.md) | 投影、Distinct 與 Aggregation 初探 |
+| [DOC-01](m06-query-dsl/docs/M06-DOC-01-criteria-api.md) | Criteria API 程式化查詢 |
+| [DOC-02](m06-query-dsl/docs/M06-DOC-02-text-geospatial.md) | 全文檢索與地理空間查詢 |
+| [DOC-03](m06-query-dsl/docs/M06-DOC-03-projection-aggregation.md) | 投影、Distinct 與 Aggregation 初探 |
 
 #### M07 — Aggregation Pipeline
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m07-aggregation-pipeline/docs/M07-DOC-01-aggregation-pipeline-stages.md) | Aggregation Pipeline 核心階段 |
-| [DOC-02](mongodb-spring-course/m07-aggregation-pipeline/docs/M07-DOC-02-lookup-unwind-facet.md) | $lookup、$unwind 與 $facet |
-| [DOC-03](mongodb-spring-course/m07-aggregation-pipeline/docs/M07-DOC-03-patterns-and-performance.md) | $bucket 分桶分析與效能最佳化 |
+| [DOC-01](m07-aggregation-pipeline/docs/M07-DOC-01-aggregation-pipeline-stages.md) | Aggregation Pipeline 核心階段 |
+| [DOC-02](m07-aggregation-pipeline/docs/M07-DOC-02-lookup-unwind-facet.md) | $lookup、$unwind 與 $facet |
+| [DOC-03](m07-aggregation-pipeline/docs/M07-DOC-03-patterns-and-performance.md) | $bucket 分桶分析與效能最佳化 |
 
 #### M08 — Schema Validation
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m08-schema-validation/docs/M08-DOC-01-mongodb-json-schema.md) | MongoDB $jsonSchema 驗證 |
-| [DOC-02](mongodb-spring-course/m08-schema-validation/docs/M08-DOC-02-bean-validation-dual-strategy.md) | Bean Validation 雙軌策略 |
-| [DOC-03](mongodb-spring-course/m08-schema-validation/docs/M08-DOC-03-schema-evolution-migration.md) | Schema Evolution 與遷移 |
+| [DOC-01](m08-schema-validation/docs/M08-DOC-01-mongodb-json-schema.md) | MongoDB $jsonSchema 驗證 |
+| [DOC-02](m08-schema-validation/docs/M08-DOC-02-bean-validation-dual-strategy.md) | Bean Validation 雙軌策略 |
+| [DOC-03](m08-schema-validation/docs/M08-DOC-03-schema-evolution-migration.md) | Schema Evolution 與遷移 |
 
 #### M09 — Transactions
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m09-transactions/docs/M09-DOC-01-mongodb-transaction-deep-dive.md) | MongoDB Transaction 深入解析 |
-| [DOC-02](mongodb-spring-course/m09-transactions/docs/M09-DOC-02-spring-transactional-mongodb.md) | Spring @Transactional + MongoDB |
-| [DOC-03](mongodb-spring-course/m09-transactions/docs/M09-DOC-03-transaction-patterns-pitfalls.md) | Transaction 模式與陷阱 |
+| [DOC-01](m09-transactions/docs/M09-DOC-01-mongodb-transaction-deep-dive.md) | MongoDB Transaction 深入解析 |
+| [DOC-02](m09-transactions/docs/M09-DOC-02-spring-transactional-mongodb.md) | Spring @Transactional + MongoDB |
+| [DOC-03](m09-transactions/docs/M09-DOC-03-transaction-patterns-pitfalls.md) | Transaction 模式與陷阱 |
 
 #### M10 — DDD Aggregate Modeling
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m10-ddd-aggregate-modeling/docs/M10-DOC-01-aggregate-root-collection-mapping.md) | Aggregate Root 與 Collection 映射 |
-| [DOC-02](mongodb-spring-course/m10-ddd-aggregate-modeling/docs/M10-DOC-02-hexagonal-architecture-mongodb.md) | Hexagonal Architecture + MongoDB |
-| [DOC-03](mongodb-spring-course/m10-ddd-aggregate-modeling/docs/M10-DOC-03-rich-domain-model-mongodb.md) | Rich Domain Model + MongoDB |
+| [DOC-01](m10-ddd-aggregate-modeling/docs/M10-DOC-01-aggregate-root-collection-mapping.md) | Aggregate Root 與 Collection 映射 |
+| [DOC-02](m10-ddd-aggregate-modeling/docs/M10-DOC-02-hexagonal-architecture-mongodb.md) | Hexagonal Architecture + MongoDB |
+| [DOC-03](m10-ddd-aggregate-modeling/docs/M10-DOC-03-rich-domain-model-mongodb.md) | Rich Domain Model + MongoDB |
 
 #### M11 — Polymorphism & Inheritance
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m11-polymorphism-inheritance/docs/M11-DOC-01-mongodb-polymorphism-strategies.md) | MongoDB 多型策略 |
-| [DOC-02](mongodb-spring-course/m11-polymorphism-inheritance/docs/M11-DOC-02-sealed-interface-mongodb.md) | Sealed Interface + MongoDB |
+| [DOC-01](m11-polymorphism-inheritance/docs/M11-DOC-01-mongodb-polymorphism-strategies.md) | MongoDB 多型策略 |
+| [DOC-02](m11-polymorphism-inheritance/docs/M11-DOC-02-sealed-interface-mongodb.md) | Sealed Interface + MongoDB |
 
 #### M12 — Event Sourcing
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m12-event-sourcing/docs/M12-DOC-01-event-sourcing-mongodb.md) | Event Sourcing + MongoDB |
-| [DOC-02](mongodb-spring-course/m12-event-sourcing/docs/M12-DOC-02-domain-event-design.md) | Domain Event 設計 |
+| [DOC-01](m12-event-sourcing/docs/M12-DOC-01-event-sourcing-mongodb.md) | Event Sourcing + MongoDB |
+| [DOC-02](m12-event-sourcing/docs/M12-DOC-02-domain-event-design.md) | Domain Event 設計 |
 
 #### M13 — CQRS Read Model
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m13-cqrs-read-model/docs/M13-DOC-01-cqrs-pattern-mongodb.md) | CQRS Pattern + MongoDB |
-| [DOC-02](mongodb-spring-course/m13-cqrs-read-model/docs/M13-DOC-02-projection-design.md) | Projection 設計 |
+| [DOC-01](m13-cqrs-read-model/docs/M13-DOC-01-cqrs-pattern-mongodb.md) | CQRS Pattern + MongoDB |
+| [DOC-02](m13-cqrs-read-model/docs/M13-DOC-02-projection-design.md) | Projection 設計 |
 
 #### M14 — Saga Pattern
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m14-saga-pattern/docs/M14-DOC-01-saga-pattern-mongodb.md) | Saga Pattern + MongoDB |
-| [DOC-02](mongodb-spring-course/m14-saga-pattern/docs/M14-DOC-02-saga-orchestration-design.md) | Saga Orchestration 設計 |
+| [DOC-01](m14-saga-pattern/docs/M14-DOC-01-saga-pattern-mongodb.md) | Saga Pattern + MongoDB |
+| [DOC-02](m14-saga-pattern/docs/M14-DOC-02-saga-orchestration-design.md) | Saga Orchestration 設計 |
 
 #### M15 — Indexing & Performance
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m15-indexing-performance/docs/M15-DOC-01-index-types.md) | MongoDB 索引類型 |
-| [DOC-02](mongodb-spring-course/m15-indexing-performance/docs/M15-DOC-02-esr-rule-index-design.md) | ESR Rule 與索引設計 |
-| [DOC-03](mongodb-spring-course/m15-indexing-performance/docs/M15-DOC-03-performance-benchmarking.md) | 效能基準測試 |
+| [DOC-01](m15-indexing-performance/docs/M15-DOC-01-index-types.md) | MongoDB 索引類型 |
+| [DOC-02](m15-indexing-performance/docs/M15-DOC-02-esr-rule-index-design.md) | ESR Rule 與索引設計 |
+| [DOC-03](m15-indexing-performance/docs/M15-DOC-03-performance-benchmarking.md) | 效能基準測試 |
 
 #### M16 — Change Streams
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m16-change-streams/docs/M16-DOC-01-change-streams-fundamentals.md) | Change Streams 基礎 |
-| [DOC-02](mongodb-spring-course/m16-change-streams/docs/M16-DOC-02-spring-data-message-listener.md) | Spring Data MessageListener |
+| [DOC-01](m16-change-streams/docs/M16-DOC-01-change-streams-fundamentals.md) | Change Streams 基礎 |
+| [DOC-02](m16-change-streams/docs/M16-DOC-02-spring-data-message-listener.md) | Spring Data MessageListener |
 
 #### M17 — Observability
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m17-observability/docs/M17-DOC-01-mongodb-observability-pillars.md) | MongoDB 可觀測性三支柱 |
-| [DOC-02](mongodb-spring-course/m17-observability/docs/M17-DOC-02-actuator-micrometer-mongodb.md) | Spring Boot Actuator + Micrometer + MongoDB |
+| [DOC-01](m17-observability/docs/M17-DOC-01-mongodb-observability-pillars.md) | MongoDB 可觀測性三支柱 |
+| [DOC-02](m17-observability/docs/M17-DOC-02-actuator-micrometer-mongodb.md) | Spring Boot Actuator + Micrometer + MongoDB |
 
 #### M18 — Schema Migration & Versioning
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m18-migration-versioning/docs/M18-DOC-01-mongock-eager-migration.md) | Mongock Eager 批次遷移 |
-| [DOC-02](mongodb-spring-course/m18-migration-versioning/docs/M18-DOC-02-converter-lazy-migration.md) | Converter Lazy 惰性遷移 |
+| [DOC-01](m18-migration-versioning/docs/M18-DOC-01-mongock-eager-migration.md) | Mongock Eager 批次遷移 |
+| [DOC-02](m18-migration-versioning/docs/M18-DOC-02-converter-lazy-migration.md) | Converter Lazy 惰性遷移 |
 
 #### M19 — Banking Capstone
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m19-banking-capstone/docs/M19-DOC-01-banking-capstone-architecture.md) | Banking Capstone 架構概覽 |
-| [DOC-02](mongodb-spring-course/m19-banking-capstone/docs/M19-DOC-02-es-cqrs-saga-integration.md) | ES + CQRS + Saga 整合 |
+| [DOC-01](m19-banking-capstone/docs/M19-DOC-01-banking-capstone-architecture.md) | Banking Capstone 架構概覽 |
+| [DOC-02](m19-banking-capstone/docs/M19-DOC-02-es-cqrs-saga-integration.md) | ES + CQRS + Saga 整合 |
 
 #### M20 — Insurance Capstone
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m20-insurance-capstone/docs/M20-DOC-01-insurance-capstone-architecture.md) | Insurance Capstone 架構概覽 |
-| [DOC-02](mongodb-spring-course/m20-insurance-capstone/docs/M20-DOC-02-polymorphism-event-sourcing-integration.md) | 多型 + Event Sourcing 整合 |
+| [DOC-01](m20-insurance-capstone/docs/M20-DOC-01-insurance-capstone-architecture.md) | Insurance Capstone 架構概覽 |
+| [DOC-02](m20-insurance-capstone/docs/M20-DOC-02-polymorphism-event-sourcing-integration.md) | 多型 + Event Sourcing 整合 |
 
 #### M21 — E-commerce Capstone
 
 | Document | Title |
 |----------|-------|
-| [DOC-01](mongodb-spring-course/m21-ecommerce-capstone/docs/M21-DOC-01-ecommerce-capstone-architecture.md) | E-commerce Capstone 架構概覽 |
-| [DOC-02](mongodb-spring-course/m21-ecommerce-capstone/docs/M21-DOC-02-aggregation-driven-business-logic.md) | 聚合管線驅動業務邏輯 |
+| [DOC-01](m21-ecommerce-capstone/docs/M21-DOC-01-ecommerce-capstone-architecture.md) | E-commerce Capstone 架構概覽 |
+| [DOC-02](m21-ecommerce-capstone/docs/M21-DOC-02-aggregation-driven-business-logic.md) | 聚合管線驅動業務邏輯 |
 
 ---
 
@@ -403,7 +401,6 @@ The course uses three real-world domains throughout all modules:
 
 ```bash
 # Build everything (compile + test)
-cd mongodb-spring-course
 ./gradlew build
 
 # Build without tests

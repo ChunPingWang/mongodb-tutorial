@@ -1,4 +1,4 @@
-rootProject.name = "mongodb-spring-course"
+rootProject.name = "mongodb-tutorial"
 
 include(
     "m01-rdb-vs-nosql",
